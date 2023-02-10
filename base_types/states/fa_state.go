@@ -1,6 +1,11 @@
-package state
+package states
 
-import "github.com/neuralchecker/go-automata/interfaces"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/neuralchecker/go-automata/interfaces"
+)
 
 // State represents a state in a finite automaton. While an empty state is
 // possible, it is still recommended to use the New function even to create
@@ -79,10 +84,21 @@ func (s *FAState[T]) NextStatesFor(symbol interfaces.Symbol[T]) []State[T] {
 
 // String returns the name of the state. Same as GetName().
 func (s *FAState[T]) String() string {
-	return s.GetName()
+	return strings.ReplaceAll(s.GetName(), " ", "_")
 }
 
 // GetName returns the name of the state. Same as String().
 func (s *FAState[T]) GetName() string {
 	return s.name
+}
+
+// GetTransitions returns the transitions of the state.
+func (s *FAState[T]) GetTransitions() []Pair[fmt.Stringer, State[T]] {
+	transitions := make([]Pair[fmt.Stringer, State[T]], 0, len(s.transitions))
+	for symbol, states := range s.transitions {
+		for _, state := range states {
+			transitions = append(transitions, Pair[fmt.Stringer, State[T]]{symbol, state})
+		}
+	}
+	return transitions
 }

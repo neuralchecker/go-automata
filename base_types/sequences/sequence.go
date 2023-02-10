@@ -1,4 +1,4 @@
-package sequence
+package sequences
 
 import (
 	"github.com/neuralchecker/go-automata/interfaces"
@@ -9,7 +9,13 @@ type Sequence[T any] struct {
 	symbols []interfaces.Symbol[T]
 }
 
-var _ interfaces.Sequence[rune] = Sequence[rune]{}
+func New[T any](symbols ...interfaces.Symbol[T]) interfaces.Sequence[T] {
+	return Sequence[T]{symbols: symbols}
+}
+
+func FromSlice[T any](symbols []interfaces.Symbol[T]) interfaces.Sequence[T] {
+	return New(symbols...)
+}
 
 func (s Sequence[T]) Append(symbols ...interfaces.Symbol[T]) interfaces.Sequence[T] {
 	newSymbols := make([]interfaces.Symbol[T], len(s.symbols)+len(symbols))

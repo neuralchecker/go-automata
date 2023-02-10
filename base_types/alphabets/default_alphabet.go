@@ -1,4 +1,4 @@
-package alphabet
+package alphabets
 
 import (
 	"strings"
@@ -8,7 +8,8 @@ import (
 )
 
 type alphabet[T any] struct {
-	symbols map[interfaces.Symbol[T]]struct{}
+	symbols      map[interfaces.Symbol[T]]struct{}
+	symbolsSlice []interfaces.Symbol[T]
 }
 
 func New[T any](symbols []interfaces.Symbol[T]) interfaces.Alphabet[T] {
@@ -18,8 +19,13 @@ func New[T any](symbols []interfaces.Symbol[T]) interfaces.Alphabet[T] {
 		symbolsSet[symbol] = struct{}{}
 	}
 	return alphabet[T]{
-		symbols: symbolsSet,
+		symbols:      symbolsSet,
+		symbolsSlice: symbols,
 	}
+}
+
+func (a alphabet[T]) IsComplete() bool {
+	return true
 }
 
 // Contains implements interfaces.Alphabet
@@ -42,28 +48,25 @@ func (a alphabet[T]) Equals(other interfaces.Alphabet[T]) bool {
 	return true
 }
 
+func (a alphabet[T]) GetSymbolAt(i int) interfaces.Symbol[T] {
+	return a.symbolsSlice[i]
+}
+
 // GetSymbols implements interfaces.Alphabet
 func (a alphabet[T]) GetSymbols() []interfaces.Symbol[T] {
-	symbols := make([]interfaces.Symbol[T], 0, len(a.symbols))
-	for symbol := range a.symbols {
-		// symbol.(S) is a type assertion, which is a way to convert an interface to a concrete type.
-		// It panics if the type assertion fails.
-		// The type assertion is safe here because we know that the symbols in the alphabet are of type S.
-		symbols = append(symbols, symbol)
-	}
-	return symbols
+	return a.symbolsSlice
 }
 
 // Iterator implements interfaces.Alphabet
 func (a alphabet[T]) Iterator() iterator.Iterator[interfaces.Symbol[T]] {
-	it := iterator.NewSetIterator(a.symbols)
+	it := iterator.NewSliceIterator(a.symbolsSlice)
 
 	return it
 }
 
 // Length implements interfaces.Alphabet
 func (a alphabet[T]) Length() int {
-	return len(a.symbols)
+	return len(a.symbolsSlice)
 }
 
 // String implements interfaces.Alphabet

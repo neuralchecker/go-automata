@@ -1,6 +1,10 @@
-package state
+package states
 
-import "github.com/neuralchecker/go-automata/interfaces"
+import (
+	"fmt"
+
+	"github.com/neuralchecker/go-automata/interfaces"
+)
 
 type State[T any] interface {
 	IsDeterministic() bool
@@ -8,4 +12,11 @@ type State[T any] interface {
 	NextStateFor(symbol interfaces.Symbol[T]) (State[T], error)
 	NextStatesFor(symbol interfaces.Symbol[T]) []State[T]
 	GetName() string
+	GetTransitions() []Pair[fmt.Stringer, State[T]]
+	String() string
+}
+
+type Pair[T1, T2 any] struct {
+	Fst T1
+	Snd T2
 }

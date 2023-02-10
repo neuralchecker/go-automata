@@ -8,5 +8,7 @@ type Alphabet[T any] interface {
 	Equals(other Alphabet[T]) bool
 	String() string
 	GetSymbols() []Symbol[T]
+	GetSymbolAt(i int) Symbol[T]
 	Iterator() iterator.Iterator[Symbol[T]]
+	IsComplete() bool
 }

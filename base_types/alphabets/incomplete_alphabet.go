@@ -1,4 +1,4 @@
-package alphabet
+package alphabets
 
 import (
 	"strings"
@@ -46,4 +46,8 @@ func (a incompleteAlphabet[T]) String() string {
 	}
 	strBuilder.WriteString("}")
 	return strBuilder.String()
+}
+
+func (a incompleteAlphabet[T]) IsComplete() bool {
+	return false
 }
