@@ -1,0 +1,12 @@
+digraph tomitas_1 {
+	rankdir=LR;
+	size=8.5;
+	start->State_A;
+	State_A->State_A[ label=b ];
+	State_A->State_B[ label=a ];
+	State_B->State_B[ label=Σ ];
+	State_A [ shape=doublecircle ];
+	State_B [ shape=circle ];
+	start [ shape=point ];
+
+}
