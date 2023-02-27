@@ -34,8 +34,8 @@ func (a alphabet[T]) Contains(symbol interfaces.Symbol[T]) bool {
 	return ok
 }
 
-// Equals implements interfaces.Alphabet
-func (a alphabet[T]) Equals(other interfaces.Alphabet[T]) bool {
+// Equal implements interfaces.Alphabet
+func (a alphabet[T]) Equal(other interfaces.Alphabet[T]) bool {
 	if a.Length() != other.Length() {
 		return false
 	}

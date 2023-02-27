@@ -23,6 +23,7 @@ type Sequence[T any] interface {
 	AsSlice() []Symbol[T]
 
 	String() string
-	Equals(other Sequence[T]) bool
+	Equal(other Sequence[T]) bool
 	Iterator() iterator.Iterator[Symbol[T]]
+	Hash() int
 }

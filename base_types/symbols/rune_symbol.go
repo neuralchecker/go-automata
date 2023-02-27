@@ -8,14 +8,11 @@ import (
 
 type RuneSymbol rune
 
-// This is a type assertion to ensure that RuneSymbol implements the Symbol[rune] interface.
-var _ interfaces.Symbol[rune] = RuneSymbol(0)
-
 func (r RuneSymbol) AddToValue(value rune) interfaces.Symbol[rune] {
 	return RuneSymbol(rune(r) + value)
 }
 
-func (r RuneSymbol) Equals(other interfaces.Symbol[rune]) bool {
+func (r RuneSymbol) Equal(other interfaces.Symbol[rune]) bool {
 	return rune(r) == other.GetValue()
 }
 
@@ -41,4 +38,8 @@ func (r RuneSymbol) LesserThan(other interfaces.Symbol[rune]) bool {
 
 func (r RuneSymbol) String() string {
 	return fmt.Sprintf("%c", rune(r))
+}
+
+func (r RuneSymbol) Hash() int {
+	return int(r)
 }

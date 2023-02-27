@@ -1,19 +1,18 @@
 package symbols
 
-import "github.com/neuralchecker/go-automata/interfaces"
+import (
+	"github.com/neuralchecker/go-automata/interfaces"
+)
 
 type StrSymbol struct {
 	value string
 }
 
-// This is a type assertion to ensure that StrSymbol implements the Symbol[string] interface.
-var _ interfaces.Symbol[string] = StrSymbol{}
-
 func (s StrSymbol) AddToValue(value string) interfaces.Symbol[string] {
 	return StrSymbol{value: s.value + value}
 }
 
-func (s StrSymbol) Equals(other interfaces.Symbol[string]) bool {
+func (s StrSymbol) Equal(other interfaces.Symbol[string]) bool {
 	return s.value == other.GetValue()
 }
 
@@ -39,4 +38,14 @@ func (s StrSymbol) LesserThan(other interfaces.Symbol[string]) bool {
 
 func (s StrSymbol) String() string {
 	return s.value
+}
+
+func (s StrSymbol) Hash() int {
+	hash := 0
+	mult := 1
+	for _, c := range s.value {
+		hash += int(c) * mult
+		mult *= 31
+	}
+	return hash
 }

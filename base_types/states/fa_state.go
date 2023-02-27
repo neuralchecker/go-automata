@@ -43,7 +43,7 @@ func (s *FAState[T]) AddTransition(symbol interfaces.Symbol[T], next ...*FAState
 	}
 }
 
-func (s *FAState[T]) Equals(other *FAState[T]) bool {
+func (s *FAState[T]) Equal(other *FAState[T]) bool {
 	return s.name == other.GetName()
 }
 

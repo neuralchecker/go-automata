@@ -74,19 +74,19 @@ func (r *RandomWalk[T]) GetCounterexampleBetween(a1 automata.Automaton[T], a2 au
 
 func (r *RandomWalk[T]) getAlphabet(a1 automata.Automaton[T], a2 automata.Automaton[T]) (interfaces.Alphabet[T], error) {
 	if a1.HasFullAlphabet() && a2.HasFullAlphabet() {
-		if !a1.GetAlphabet().Equals(a2.GetAlphabet()) {
+		if !a1.GetAlphabet().Equal(a2.GetAlphabet()) {
 			return nil, ErrAlphabetsDiffer
 		}
 		return a1.GetAlphabet(), nil
 	}
 	if !a1.HasFullAlphabet() && a2.HasFullAlphabet() {
-		if !a1.GetAlphabet().Equals(a2.GetAlphabet()) {
+		if !a1.GetAlphabet().Equal(a2.GetAlphabet()) {
 			return nil, ErrAlphabetsDiffer
 		}
 		return a2.GetAlphabet(), nil
 	}
 	if a1.HasFullAlphabet() && !a2.HasFullAlphabet() {
-		if !a2.GetAlphabet().Equals(a1.GetAlphabet()) {
+		if !a2.GetAlphabet().Equal(a1.GetAlphabet()) {
 			return nil, ErrAlphabetsDiffer
 		}
 		return a1.GetAlphabet(), nil

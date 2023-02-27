@@ -11,7 +11,7 @@ func (g Equality[T]) IsSatisfied(symbol interfaces.Symbol[T]) bool {
 	if g.S == nil {
 		return false
 	}
-	return g.S.Equals(symbol)
+	return g.S.Equal(symbol)
 }
 
 // String implements interfaces.Guard

@@ -1,6 +1,8 @@
 package sequences
 
 import (
+	"strings"
+
 	"github.com/neuralchecker/go-automata/interfaces"
 	"github.com/neuralchecker/go-automata/internal/iterator"
 )
@@ -28,14 +30,14 @@ func (s Sequence[T]) AsSlice() []interfaces.Symbol[T] {
 	return s.symbols
 }
 
-func (s Sequence[T]) Equals(other interfaces.Sequence[T]) bool {
+func (s Sequence[T]) Equal(other interfaces.Sequence[T]) bool {
 	sSlice := s.AsSlice()
 	oSlice := other.AsSlice()
 	if len(sSlice) != len(oSlice) {
 		return false
 	}
 	for i := range sSlice {
-		if !sSlice[i].Equals(oSlice[i]) {
+		if !sSlice[i].Equal(oSlice[i]) {
 			return false
 		}
 	}
@@ -59,29 +61,46 @@ func (s Sequence[T]) GetSuffixes() []interfaces.Sequence[T] {
 }
 
 func (s Sequence[T]) IsEmpty() bool {
-	panic("unimplemented")
+	return len(s.symbols) == 0
 }
 
 func (s Sequence[T]) Iterator() iterator.Iterator[interfaces.Symbol[T]] {
-	panic("unimplemented")
+	return iterator.NewSliceIterator(s.symbols)
 }
 
 func (s Sequence[T]) Length() int {
-	panic("unimplemented")
+	return len(s.symbols)
 }
 
 func (s Sequence[T]) Prepend(symbols ...interfaces.Symbol[T]) interfaces.Sequence[T] {
-	panic("unimplemented")
+	newSymbols := make([]interfaces.Symbol[T], len(s.symbols)+len(symbols))
+	copy(newSymbols, s.symbols)
+	copy(newSymbols[len(s.symbols):], symbols)
+	return Sequence[T]{symbols: newSymbols}
 }
 
 func (s Sequence[T]) String() string {
-	panic("unimplemented")
+	strBuilder := strings.Builder{}
+	for _, symbol := range s.symbols {
+		strBuilder.WriteString(symbol.String())
+	}
+	return strBuilder.String()
 }
 
 func (s Sequence[T]) GetSymbolAt(index int) interfaces.Symbol[T] {
-	panic("unimplemented")
+	return s.symbols[index]
 }
 
 func (s Sequence[T]) getSubsequence(start, end int) interfaces.Sequence[T] {
 	return Sequence[T]{symbols: s.symbols[start:end]}
+}
+
+func (s Sequence[T]) Hash() int {
+	hash := 0
+	mult := 1
+	for _, symbol := range s.symbols {
+		hash += symbol.Hash() * mult
+		mult *= 31
+	}
+	return hash
 }

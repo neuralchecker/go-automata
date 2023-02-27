@@ -229,7 +229,7 @@ func (dfa *DeterministicFiniteAutomaton[T]) Export(pathStr string) error {
 	return errResult
 }
 
-func (dfa *DeterministicFiniteAutomaton[T]) Equals(other Automaton[T]) bool {
+func (dfa *DeterministicFiniteAutomaton[T]) Equal(other Automaton[T]) bool {
 	ret, _ := dfa.ComparingStrategy.AreEquivalent(dfa, other)
 	return ret
 }

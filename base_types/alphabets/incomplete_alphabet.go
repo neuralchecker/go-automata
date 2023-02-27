@@ -21,7 +21,7 @@ func NewIncomplete[T any](symbols []interfaces.Symbol[T]) interfaces.Alphabet[T]
 	}}
 }
 
-func (a incompleteAlphabet[T]) Equals(other interfaces.Alphabet[T]) bool {
+func (a incompleteAlphabet[T]) Equal(other interfaces.Alphabet[T]) bool {
 	if a.Length() > other.Length() {
 		return false
 	}
