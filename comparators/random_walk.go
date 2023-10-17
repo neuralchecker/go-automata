@@ -4,7 +4,6 @@ import (
 	"errors"
 	"math/rand"
 
-	"github.com/hashicorp/go-multierror"
 	"github.com/neuralchecker/go-automata/automata"
 	"github.com/neuralchecker/go-automata/base_types/alphabets"
 	"github.com/neuralchecker/go-automata/base_types/sequences"
@@ -97,13 +96,13 @@ func (r *RandomWalk[T]) getAlphabet(a1 automata.Automaton[T], a2 automata.Automa
 }
 
 func (r *RandomWalk[T]) equivalentOutput(a1 automata.Automaton[T], a2 automata.Automaton[T], sequence interfaces.Sequence[T]) (bool, error) {
-	errResult := &multierror.Error{}
+	var errResult error
 
 	a1Out, err1 := a1.Accepts(sequence)
 	a2Out, err2 := a2.Accepts(sequence)
-	errResult = multierror.Append(errResult, err1, err2)
+	errResult = errors.Join(errResult, err1, err2)
 
-	if errResult.ErrorOrNil() != nil {
+	if errResult != nil {
 		return false, errResult
 	}
 	return a1Out == a2Out, nil

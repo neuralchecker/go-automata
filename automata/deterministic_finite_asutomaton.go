@@ -1,9 +1,8 @@
 package automata
 
 import (
+	"errors"
 	"reflect"
-
-	multierror "github.com/hashicorp/go-multierror"
 
 	"github.com/neuralchecker/go-automata/base_types/states"
 	"github.com/neuralchecker/go-automata/interfaces"
@@ -23,7 +22,8 @@ type DeterministicFiniteAutomaton[T any] struct {
 var _ FiniteAutomaton[int] = &DeterministicFiniteAutomaton[int]{}
 
 func NewDeterministicFiniteAutomaton[T any](name string, alphabet interfaces.Alphabet[T], initialState *states.FAState[T], states []*states.FAState[T],
-	comparator Comparator[T]) *DeterministicFiniteAutomaton[T] {
+	comparator Comparator[T],
+) *DeterministicFiniteAutomaton[T] {
 	return &DeterministicFiniteAutomaton[T]{
 		States:              states,
 		Alphabet:            alphabet,
@@ -37,12 +37,14 @@ func NewDeterministicFiniteAutomaton[T any](name string, alphabet interfaces.Alp
 
 // Shorthand for NewDeterministicFiniteAutomaton
 func NewDFA[T any](name string, alphabet interfaces.Alphabet[T], initialState *states.FAState[T], states []*states.FAState[T],
-	comparator Comparator[T]) *DeterministicFiniteAutomaton[T] {
+	comparator Comparator[T],
+) *DeterministicFiniteAutomaton[T] {
 	return NewDeterministicFiniteAutomaton(name, alphabet, initialState, states, comparator)
 }
 
 func NewDeterministicFiniteAutomatonWithHole[T any](name string, alphabet interfaces.Alphabet[T], initialState *states.FAState[T], states []*states.FAState[T],
-	comparator Comparator[T], hole *states.FAState[T]) *DeterministicFiniteAutomaton[T] {
+	comparator Comparator[T], hole *states.FAState[T],
+) *DeterministicFiniteAutomaton[T] {
 	dfa := NewDeterministicFiniteAutomaton(name, alphabet, initialState, states, comparator)
 	dfa.SetHole(hole)
 	return dfa
@@ -50,7 +52,8 @@ func NewDeterministicFiniteAutomatonWithHole[T any](name string, alphabet interf
 
 // Shorthand for NewDeterministicFiniteAutomatonWithHole
 func NewDFAWithHole[T any](name string, alphabet interfaces.Alphabet[T], initialState *states.FAState[T], states []*states.FAState[T],
-	comparator Comparator[T], hole *states.FAState[T]) *DeterministicFiniteAutomaton[T] {
+	comparator Comparator[T], hole *states.FAState[T],
+) *DeterministicFiniteAutomaton[T] {
 	return NewDeterministicFiniteAutomatonWithHole(name, alphabet, initialState, states, comparator, hole)
 }
 
@@ -162,19 +165,19 @@ func (dfa *DeterministicFiniteAutomaton[T]) Reset() error {
 
 func (dfa *DeterministicFiniteAutomaton[T]) Accepts(sequence interfaces.Sequence[T]) (bool, error) {
 	var err error
-	actualState := dfa.InitialState
+	currentState := dfa.InitialState
 	if err = dfa.Reset(); err != nil {
 		return false, err
 	}
 	it := sequence.Iterator()
 	for it.HasNext() {
 		symbol := it.Next()
-		actualState, err = dfa.step(actualState, symbol)
+		currentState, err = dfa.step(currentState, symbol)
 		if err != nil {
 			return false, err
 		}
 	}
-	return dfa.ActualState.IsFinal(), nil
+	return currentState.IsFinal(), nil
 }
 
 func (dfa *DeterministicFiniteAutomaton[T]) step(actualState *states.FAState[T], symbol interfaces.Symbol[T]) (*states.FAState[T], error) {
@@ -223,7 +226,7 @@ func (dfa *DeterministicFiniteAutomaton[T]) Export(pathStr string) error {
 	for _, exporter := range dfa.ExportingStrategies {
 		err := exporter.Export(dfa, pathStr)
 		if err != nil {
-			errResult = multierror.Append(errResult, err)
+			errResult = errors.Join(errResult, err)
 		}
 	}
 	return errResult

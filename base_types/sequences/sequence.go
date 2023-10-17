@@ -84,7 +84,11 @@ func (s Sequence[T]) String() string {
 	for _, symbol := range s.symbols {
 		strBuilder.WriteString(symbol.String())
 	}
-	return strBuilder.String()
+	if str := strBuilder.String(); str == "" {
+		return "ε"
+	} else {
+		return str
+	}
 }
 
 func (s Sequence[T]) GetSymbolAt(index int) interfaces.Symbol[T] {
